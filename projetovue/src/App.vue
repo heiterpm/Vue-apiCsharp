@@ -1,6 +1,6 @@
 <template>
-  <Navbar :logo="logo_src" :alt="app_name"/>
-  <router-view/>
+  <Navbar :logo="logo_src" :alt="app_name" />
+  <router-view />
   <Footer />
 </template>
 
@@ -11,9 +11,9 @@ import Footer from './components/Footer.vue';
 export default {
   components: {
     Navbar,
-    Footer,
+    Footer
   },
-  data(){
+  data() {
     return {
       logo_src: "/img/logo.png",
       app_name: "Lista de Produtos"
@@ -24,18 +24,20 @@ export default {
 
 
 <style>
-  @import url(https://fonts.googleapis.com/css?family=Roboto);
-*{
-    font-family: Roboto;
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-  html{
-    min-height: 100%;
-    background-image: url('../public/img/mercado.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-   }
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+* {
+  font-family: Roboto;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background-image: url('../public/img/mercado.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
 </style>

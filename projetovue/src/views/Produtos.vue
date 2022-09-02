@@ -1,17 +1,17 @@
 <template>
   <div class="main-container">
-    <TabelaProdutos/>
+    <TabelaProdutos />
   </div>
 </template>
 
 <script>
-  import TabelaProdutos from "../components/TabelaProdutos.vue";
+import TabelaProdutos from "../components/TabelaProdutos.vue";
 
-  export default {
-    name: 'Produtos',
-    components: {
-      TabelaProdutos
-    }
+export default {
+  name: 'Produtos',
+  components: {
+    TabelaProdutos
   }
+}
 
 </script>
