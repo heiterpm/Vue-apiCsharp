@@ -12,14 +12,14 @@
             </thead>
             <tbody>
                 <tr v-for="produto in produtos" :key="produto.id">
-                    <td><button id="nomeProd" @click="showModal">{{ produto.nome }}</button></td>
+                    <td><button id="nomeProd" @click="getProduto(produto.id);">{{ produto.nome }}</button></td>
                     <td>{{ produto.preco }}</td>
                     <td>{{ produto.estoque }}</td>
                     <td id="botoestab"><button class="edit">Editar</button><button class="delete">Excluir</button></td>
                 </tr>
             </tbody>
         </table>
-        <Modal v-show="isModalVisible" @close="closeModal" />
+        <Modal v-show="isModalVisible" @close="closeModal" :produto="produto"/>
     </div>
 </template>
 
@@ -33,6 +33,8 @@ export default {
     data() {
         return {
             produtos: [],
+            produto: "",
+            stringtest: "Olaola",
             isModalVisible: false
         }
     },
@@ -45,9 +47,15 @@ export default {
                 this.produtos.push(data[i]);
             }
         },
-        showModal() {
+
+        async getProduto(id){
+            const req = await fetch("http://localhost:3000/Produtos/"+ id );
+            const data = await req.json();
+            this.produto = data;
+            console.log(this.produto)
             this.isModalVisible = true;
         },
+
         closeModal() {
             this.isModalVisible = false;
         }

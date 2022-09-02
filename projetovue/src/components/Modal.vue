@@ -1,30 +1,26 @@
-<script>
-export default {
-  name: 'Modal',
-  methods: {
-    close() {
-      this.$emit('close');
-    },
-  },
-};
-</script>
-
 <template>
   <transition name="modal-fade">
     <div class="modal-backdrop">
       <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
         <header class="modal-header" id="modalTitle">
           <slot name="header">
-            This is the default tile!
+            {{produto.nome}}
           </slot>
           <button type="button" class="btn-close" @click="close" aria-label="Close modal">
-            x
+            X
           </button>
         </header>
 
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-            This is the default body!
+            <ul>
+              <li>Preco: {{ produto.preco}}</li>
+              <li>Estoque: {{ produto.estoque}}</li>
+              <li>Valor Secreto: {{ produto.valorsecreto1}}</li>
+            </ul>
+            <br>
+            Descrição:
+            <div id="descricaoModal">{{produto.descricao}}</div>
           </slot>
         </section>
 
@@ -41,6 +37,18 @@ export default {
   </transition>
 </template>
 
+<script>
+  export default {
+    name: 'Modal',
+    methods: {
+      close() {
+        this.$emit('close');
+      },
+    },
+    props: ['produto']
+  };
+</script>
+  
 <style>
 .modal-backdrop {
   position: fixed;
@@ -113,5 +121,16 @@ export default {
 .modal-fade-enter-active,
 .modal-fade-leave-active {
   transition: opacity .5s ease;
+}
+
+#descricaoModal {
+  display: block;
+  border: 2px solid black;
+  width: 300px;
+  height: 100%;
+  max-height: 500px;
+  justify-content: start;
+  align-items: flex-start;
+  overflow-y: scroll;
 }
 </style>
