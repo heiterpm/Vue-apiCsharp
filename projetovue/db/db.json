@@ -1,0 +1,35 @@
+{
+  "produtos": [
+      {
+        "id": 1,
+        "nome": "Macieria",
+        "preco": 15.75,
+        "estoque": 6,
+        "valorsecreto1": 25,
+        "descricao": "Nham nham uma macieira"
+      },
+      {
+        "id": 2,
+        "nome": "Banana",
+        "preco": 20.50,
+        "estoque": 12
+      }
+    ],
+  "usuarios": [
+    {
+      "id":1,
+      "user": "pedro",
+      "password": "pedro123"
+    },
+    {
+      "id":2,
+      "user": "douglas",
+      "password": "douglas123"
+    },
+    {
+      "id":3,
+      "user": "admin",
+      "password": "admin123"
+    }
+  ]
+}
