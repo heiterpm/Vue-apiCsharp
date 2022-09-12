@@ -1,32 +1,56 @@
 <template>
   <div id="caixa-login">
     <h1>Login</h1>
-    <form method="post" id="formlogin" @submit="getUser">
+    <form id="formlogin">
       <div id="logintxt">
-        <input type="text" id="user" v-model="user" class="form-control list-group-item" placeholder="Usuario"><br>
-        <input type="text" id="password" v-model="password" class="form-control list-group-item" placeholder="Senha">
+        <input type="text" id="usuario" v-model="user" class="form-control list-group-item" placeholder="Usuario"><br>
+        <input type="password" id="senha" v-model="password" class="form-control list-group-item" placeholder="Senha">
       </div>
-      <button type="submit">Logar</button>
+      <button v-on:click="login">Logar</button>
     </form>
   </div>
 </template>
   
   <script>
+import api from '@/services/api'
+
 export default {
   name: 'LoginForm',
   data() {
     return {
-      user: null,
-      password: null
+        user: "",
+        password: ""
     }
   },
   methods: {
-    async getUser(e) {
-      e.preventDefault();
-      const req = await fetch("http://localhost:3000/usuarios/1");
-      const data = await req.json();
-      console.log(data);
+    async login(e){
+      e.preventDefault(e)
+      if(this.validaLogin()){
+        api.post('Usuarios/Login',{
+            nome: "nome",
+            usuario: this.user,
+            senha: this.password
+        })
+        .then(response => {
+          console.log(response)
+            localStorage.setItem('token',JSON.stringify(response.data));
+            response.data = "";
+            this.$router.push({name:"Produtos"})
+        })
+      }
     },
+    validaLogin(){
+      if(!this.user){
+        console.log("Usuario nulo")
+        return;
+      }
+      if(!this.password){
+        console.log("senha errada")
+        return;
+      }
+      return true;
+    },
+    
   },
   mounted() {
 

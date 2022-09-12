@@ -6,6 +6,7 @@
         <nav>
             <router-link to="/">Home</router-link> |
             <router-link to="/Produtos">Produtos</router-link>
+            <a href="javascript:void(0);" v-if="this.token != 'false'" @click="logoff">Logoff</a>
         </nav>
     </div>
 </template>
@@ -13,7 +14,35 @@
 <script>
 export default {
     name: "Navbar",
-    props: ["logo", "alt"]
+    props: ["logo", "alt","token"],
+    data() {
+        return {
+            token: false,
+        }
+    },
+    methods: {
+        async verificaLogin() {
+            this.token = localStorage.getItem('token');
+            if (this.token === "false") {
+                console.log("Retorno false")
+                return 0;
+            } else {
+                console.log("Retorno true")
+                return 1;
+            }
+        },
+        logoff() {
+            localStorage.setItem('token', JSON.stringify(false));
+            this.verificaLogin()
+            this.$router.push({ name: "home" })
+        },
+    },
+    mounted() {
+        this.verificaLogin(),
+            this.$nextTick(function () {
+                this.verificaLogin()
+            })
+    }
 }
 </script>
 
@@ -45,6 +74,7 @@ export default {
 }
 
 #nav a:hover {
-    color: #FFF;
+    color: red;
 }
+
 </style>

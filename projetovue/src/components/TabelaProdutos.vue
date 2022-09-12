@@ -12,19 +12,28 @@
             </thead>
             <tbody>
                 <tr v-for="produto in produtos" :key="produto.id">
-                    <td><button id="nomeProd" @click="getProduto(produto.id);">{{ produto.nome }}</button></td>
+                    <td><button id="nomeProd" @click="getProduto(produto.id);">{{ produto.name }}</button></td>
                     <td>{{ produto.preco }}</td>
-                    <td>{{ produto.estoque }}</td>
-                    <td id="botoestab"><button class="edit">Editar</button><button class="delete">Excluir</button></td>
+                    <td>{{ produto.qtdEstoque }}</td>
+                    <td id="botoestab"><button class="edit">Editar</button><button class="delete"
+                            @click="deleteProduto(produto.id);">Excluir</button></td>
                 </tr>
             </tbody>
         </table>
-        <Modal v-show="isModalVisible" @close="closeModal" :produto="produto"/>
+        <div id="addProd">
+            <button>
+                <router-link to="/CriarProduto">Adicionar Produto</router-link>
+            </button>
+        </div>
+
+        <Modal v-show="isModalVisible" @close="closeModal" :produto="produto" />
     </div>
 </template>
 
 <script>
 import Modal from '../components/Modal.vue';
+import api from '@/services/api.js'
+
 export default {
     name: 'TabelaProdutos',
     components: {
@@ -33,31 +42,71 @@ export default {
     data() {
         return {
             produtos: [],
-            produto: "",
+            produto: {
+                Name: "",
+                Descricao: "",
+                Preco: "",
+                qtdEstoque: "",
+                Img: "",
+                fileSrc: require("@/assets/noImage.jpg")
+            },
             stringtest: "Olaola",
             isModalVisible: false
         }
     },
     methods: {
+        limparTela() {
+            this.produtos = [];
+        },
         async getProdutos() {
-            const req = await fetch("http://localhost:3000/Produtos");
-            const data = await req.json();
 
-            for (var i = 0; i < data.length; i++) {
-                this.produtos.push(data[i]);
-            }
+            this.limparTela();
+
+            api.get('Produtos/AllProdutos',this.getTokenConfig()).then(response => {
+                for (var i = 0; i < response.data.length; i++) {
+                    this.produtos.push(response.data[i]);
+                }
+
+                this.produtos.sort((a, b) => {
+                    return a.preco - b.preco;
+                })
+                console.log(this.produtos);
+            })
         },
 
-        async getProduto(id){
-            const req = await fetch("http://localhost:3000/Produtos/"+ id );
-            const data = await req.json();
-            this.produto = data;
-            console.log(this.produto)
-            this.isModalVisible = true;
+        async getProduto(id) {
+            api.get('Produtos/GetProduto/' + id,this.getTokenConfig()).then(response => {
+                console.log(response.data)
+                this.produto = response.data;
+
+                if (this.produto.imgByte != null && this.produto.imgByte.length > 0) {
+                    this.produto.fileSrc = 'data:image/jpeg;base64,' + this.produto.imgByte;
+                    this.produto.Img = 'data:image/jpeg;base64,' + this.produto.imgByte;
+                    if (this.produto.fileSrc == "")
+                    {
+                        this.produto.fileSrc = 'data:image/png;base64,' + this.produto.imgByte;
+                        this.produto.Img = 'data:image/png;base64,' + this.produto.imgByte;
+                    }
+                }
+                this.isModalVisible = true;
+            })
+        },
+        async deleteProduto(id) {
+            api.delete('Produtos/DeleteProduto/' + id,this.getTokenConfig()).then(response => {
+                this.getProdutos();
+                console.log(response.data)
+            })
         },
 
         closeModal() {
             this.isModalVisible = false;
+        },
+        getTokenConfig(){
+            var token = JSON.parse(localStorage.getItem('token'));
+            const config = {
+                headers: { Authorization: `Bearer ${token}`}
+            };
+            return config;
         }
     },
     mounted() {
@@ -147,5 +196,30 @@ tr {
 #nomeProd:hover {
     color: #fcba03;
     font-size: 18px;
+}
+
+#addProd {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+#addProd button {
+    width: 200px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    background: lightgreen;
+    transition: .5s;
+    font-weight: bolder;
+}
+
+#addProd button:hover {
+    font-size: 18px;
+}
+
+#addProd a {
+    text-decoration: none;
+    color: black;
 }
 </style>
