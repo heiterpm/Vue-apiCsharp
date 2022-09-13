@@ -11,13 +11,11 @@ const store = createStore({
    mutations: {
     salvarTokenauth(state, payload){
         state.token = payload;
-        console.log(state.token)
     },
 
     logOff(state)
     {
         state.token= false;
-        console.log(state.token)
     }
     
    },

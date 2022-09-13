@@ -1,0 +1,33 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ./APIVue/APIVue
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_HTTP_PORT=https://+:5001
+      - ASPNETCORE_URLS=http://+:7134
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 7134:7134
+    # depends_on:
+    #   - mssql-server
+    command: dotnet watch run
+    
+  # mssql-server:
+  #   image: mcr.microsoft.com/mssql/server:2019-latest
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #     - SA_PASSWORD=SenhaSecreta@123
+  #   ports: 
+  #     - 1433:1433 
+
+  vue:
+    build:
+      context: ./projetovue
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+       - ./projetovue:/usr/src/app/my-app
+       - /usr/src/app/my-app/node_modules

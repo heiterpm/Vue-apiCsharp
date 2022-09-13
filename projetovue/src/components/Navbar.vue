@@ -26,10 +26,8 @@ export default {
         async verificaLogin() {
             this.token = localStorage.getItem('token');
             if (this.token === "false") {
-                console.log(this.token)
                 return 0;
             } else {
-                console.log(this.token)
                 return 1;
             }
             
@@ -42,7 +40,6 @@ export default {
     },
     watch:{
         '$store.state.token'(){
-            console.log('Deu certo?');
             this.verificaLogin();
         }
     }
