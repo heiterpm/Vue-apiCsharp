@@ -67,6 +67,10 @@ namespace APIVue.Controllers
                         produto.Img.CopyToAsync(fileStream);
                     }
             }
+            else if(produto.Img == null) 
+            {
+                produto.NomeArquivo = "noImage.jpg";
+            }
             
             if (await _produtosRepository.SaveAllAsync())
             {

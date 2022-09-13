@@ -32,7 +32,8 @@
 
 <script>
 import Modal from '../components/Modal.vue';
-import api from '@/services/api.js'
+import api from '@/services/api.js';
+import Swal from 'sweetalert2';
 
 export default {
     name: 'TabelaProdutos',
@@ -62,28 +63,39 @@ export default {
 
             this.limparTela();
 
-            api.get('Produtos/AllProdutos',this.getTokenConfig()).then(response => {
-                for (var i = 0; i < response.data.length; i++) {
-                    this.produtos.push(response.data[i]);
-                }
+            api.get('Produtos/AllProdutos', this.getTokenConfig())
+                .then(response => {
+                    for (var i = 0; i < response.data.length; i++) {
+                        this.produtos.push(response.data[i]);
+                    }
 
-                this.produtos.sort((a, b) => {
-                    return a.preco - b.preco;
+                    this.produtos.sort((a, b) => {
+                        return a.preco - b.preco;
+                    })
                 })
-                console.log(this.produtos);
-            })
+                .catch((error) => {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Token nao autenticado',
+                        background: '#222',
+                        color: 'white',
+                        confirmButtonColor: '#fcba03'
+                    })
+                        .then(() => {
+                            this.$router.push({ name: "home" })
+                        })
+                })
         },
 
         async getProduto(id) {
-            api.get('Produtos/GetProduto/' + id,this.getTokenConfig()).then(response => {
-                console.log(response.data)
+            api.get('Produtos/GetProduto/' + id, this.getTokenConfig()).then(response => {
                 this.produto = response.data;
 
+                //Exibição de Imagens
                 if (this.produto.imgByte != null && this.produto.imgByte.length > 0) {
                     this.produto.fileSrc = 'data:image/jpeg;base64,' + this.produto.imgByte;
                     this.produto.Img = 'data:image/jpeg;base64,' + this.produto.imgByte;
-                    if (this.produto.fileSrc == "")
-                    {
+                    if (this.produto.fileSrc == "") {
                         this.produto.fileSrc = 'data:image/png;base64,' + this.produto.imgByte;
                         this.produto.Img = 'data:image/png;base64,' + this.produto.imgByte;
                     }
@@ -92,19 +104,18 @@ export default {
             })
         },
         async deleteProduto(id) {
-            api.delete('Produtos/DeleteProduto/' + id,this.getTokenConfig()).then(response => {
+            api.delete('Produtos/DeleteProduto/' + id, this.getTokenConfig()).then(response => {
                 this.getProdutos();
-                console.log(response.data)
             })
         },
 
         closeModal() {
             this.isModalVisible = false;
         },
-        getTokenConfig(){
+        getTokenConfig() {
             var token = JSON.parse(localStorage.getItem('token'));
             const config = {
-                headers: { Authorization: `Bearer ${token}`}
+                headers: { Authorization: `Bearer ${token}` }
             };
             return config;
         }

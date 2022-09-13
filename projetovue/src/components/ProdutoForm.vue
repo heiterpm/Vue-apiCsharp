@@ -25,6 +25,7 @@
 
 <script>
 import api from '@/services/api'
+import Swal from 'sweetalert2';
 
 export default {
     name: 'ProdutoForm',
@@ -43,32 +44,67 @@ export default {
     methods: {
         save(e) {
             e.preventDefault(e)
-
+            if (this.validaForm()) {
                 var formData = new FormData();
                 for (var key in this.produto) {
                     formData.append(key, this.produto[key])
                 }
 
-                formData.append("Img",this.Img);
+                formData.append("Img", this.Img);
 
                 api.post('Produtos/AddProduto', formData, this.getTokenConfig())
                     .then(function (response) {
-                        console.log(response)
-                        this.$router.push({ name: "Produtos" })
                     })
-            
+                this.$router.push({ name: "Produtos" });
+            }
         },
-        uploadImage(e){
+
+        uploadImage(e) {
             this.produto.Img = e.target.files[0];
             this.produto.fileSrc = window.URL.createObjectURL(this.produto.Img);
         },
-        getTokenConfig(){
+
+        getTokenConfig() {
             var token = JSON.parse(localStorage.getItem('token'));
             const config = {
-                headers: { Authorization: `Bearer ${token}`}
+                headers: { Authorization: `Bearer ${token}` }
             };
             return config;
-        }
+        },
+
+        validaForm() {
+            if (!this.produto.Name) {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Nome do Produto Vazio',
+                    background: '#222',
+                    color: 'white',
+                    confirmButtonColor: '#fcba03'
+                })
+                return;
+            }
+            if (!this.produto.Preco) {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Campo Preco Vazio',
+                    background: '#222',
+                    color: 'white',
+                    confirmButtonColor: '#fcba03'
+                })
+                return;
+            }
+            if (!this.produto.qtdEstoque) {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Campo Estoque Vazio',
+                    background: '#222',
+                    color: 'white',
+                    confirmButtonColor: '#fcba03'
+                })
+                return;
+            }
+            return true;
+        },
     }
 }
 </script>
@@ -99,7 +135,7 @@ export default {
 #formProduto .campoInput input {
     display: block;
     margin-left: auto;
-    margin-right:auto;
+    margin-right: auto;
 }
 
 #formProduto textarea {
@@ -112,10 +148,10 @@ export default {
     overflow-y: hidden;
     resize: none;
     margin-left: auto;
-    margin-right:auto;
+    margin-right: auto;
 }
 
-.campoInput Img{
+.campoInput Img {
     width: 200px;
 }
 </style>

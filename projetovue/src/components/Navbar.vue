@@ -12,36 +12,43 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     name: "Navbar",
-    props: ["logo", "alt","token"],
+    props: ["logo", "alt"],
     data() {
         return {
-            token: false,
+            token: this.$store.state.token,
         }
     },
     methods: {
         async verificaLogin() {
             this.token = localStorage.getItem('token');
             if (this.token === "false") {
-                console.log("Retorno false")
+                console.log(this.token)
                 return 0;
             } else {
-                console.log("Retorno true")
+                console.log(this.token)
                 return 1;
             }
+            
         },
         logoff() {
             localStorage.setItem('token', JSON.stringify(false));
-            this.verificaLogin()
+            this.$store.commit('logOff')
+            this.verificaLogin();
             this.$router.push({ name: "home" })
         },
     },
     mounted() {
-        this.verificaLogin(),
-            this.$nextTick(function () {
-                this.verificaLogin()
-            })
+        this.verificaLogin()
+    },
+    watch:{
+        '$store.state.token'(){
+            console.log('Deu certo?');
+            this.verificaLogin();
+        }
     }
 }
 </script>
