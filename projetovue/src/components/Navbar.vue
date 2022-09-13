@@ -37,12 +37,8 @@ export default {
         logoff() {
             localStorage.setItem('token', JSON.stringify(false));
             this.$store.commit('logOff')
-            this.verificaLogin();
             this.$router.push({ name: "home" })
         },
-    },
-    mounted() {
-        this.verificaLogin()
     },
     watch:{
         '$store.state.token'(){
